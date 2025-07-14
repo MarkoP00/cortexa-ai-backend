@@ -11,8 +11,10 @@
   "author": "Marko Pantovic",
   "license": "MIT",
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
+    "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
     "openai": "^5.9.0",
     "stream-chat": "^9.10.1"
@@ -21,6 +23,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.13",
+    "drizzle-kit": "^0.31.4",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
