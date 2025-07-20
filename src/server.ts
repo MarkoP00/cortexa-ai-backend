@@ -77,6 +77,25 @@ app.post(
   }
 );
 
+app.post("/check-user", async (req: Request, res: Response): Promise<any> => {
+  if (!req.body) {
+    res.status(400).json({ error: "Request body is missing..." });
+  }
+
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.userId, userId));
+
+  res.status(200).json({ userId, existingUser });
+});
+
 // Send message to AI
 app.post("/chat", async (req: Request, res: Response): Promise<any> => {
   if (!req.body) {
@@ -99,7 +118,7 @@ app.post("/chat", async (req: Request, res: Response): Promise<any> => {
         .json({ error: "User not found. Please register first." });
     }
 
-    // Chekc user in Neon database - saving chat in Neon base on line 125
+    // Chekc user in Neon database - saving chat in Neon base on line 143
     const existingUser = await db
       .select()
       .from(users)
