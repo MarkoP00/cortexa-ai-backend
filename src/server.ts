@@ -7,7 +7,7 @@ import { db } from "./config/database.js";
 import { chats, users } from "./db/schema.js";
 import { eq } from "drizzle-orm";
 import { ChatCompletionMessageParam } from "openai/resources.mjs"; //ovo je open ai resource
-
+import { desc } from "drizzle-orm";
 dotenv.config();
 
 const app = express();
@@ -135,16 +135,19 @@ app.post("/chat", async (req: Request, res: Response): Promise<any> => {
       .select()
       .from(chats)
       .where(eq(chats.userId, userId))
-      .orderBy(chats.createdAt)
+      .orderBy(desc(chats.createdAt)) // newest first
       .limit(10);
 
+    const orderedHistory = chatHistory.reverse();
+    
     //Format chat history for OpenAI
-    const conversation: ChatCompletionMessageParam[] = chatHistory.flatMap(
-      (chat) => [
+    const conversation = orderedHistory.flatMap((chat) => {
+      if (!chat.message || !chat.reply) return [];
+      return [
         { role: "user", content: chat.message },
         { role: "assistant", content: chat.reply },
-      ]
-    );
+      ];
+    });
 
     // Add latest user messages to the conversation
     conversation.push({ role: "user", content: message });
