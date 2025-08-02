@@ -27,6 +27,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+// GET - Fetch only to awake server faster
+app.get("/home", async (req: Request, res: Response): Promise<any> => {
+  return res.status(200).json({ message: "Fetch to awake database!" });
+});
+
 // Register user with Stream Chat app
 app.post(
   "/register-user",
@@ -139,7 +144,7 @@ app.post("/chat", async (req: Request, res: Response): Promise<any> => {
       .limit(10);
 
     const orderedHistory = chatHistory.reverse();
-    
+
     //Format chat history for OpenAI
     const conversation = orderedHistory.flatMap((chat) => {
       if (!chat.message || !chat.reply) return [];
